@@ -7,7 +7,7 @@ Files included
 - [azure_chat_example.py] : Simple Azure OpenAI chat example asking a plain-language question.
 - [bad_prompt_terraform_example.py] : Illustration of a vague prompt that produces low-quality Terraform output.
 - [good_prompt_terraform_example.py](: Precise prompts that encourage production-ready Terraform HCL output.
-- [requirements.txt](requirements.txt#L1) : Python dependencies for this project.
+- [requirements.txt]: Python dependencies for this project.
 
 Quick start (macOS)
 
