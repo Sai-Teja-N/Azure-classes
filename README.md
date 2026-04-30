@@ -1,12 +1,12 @@
-# Azure-classes — Rephrased Examples and Usage
+# Azure-classes —  Examples and Usage
 
-This repository contains rephrased example scripts that demonstrate basic Azure OpenAI usage and prompt-quality examples.
+This repository contains  example scripts that demonstrate basic Azure OpenAI usage and prompt-quality examples.
 
 Files included
-- [incident_analyzer.py](incident_analyzer.py#L1) : Analyze logs and return a concise root-cause and remediation.
-- [azure_chat_example.py](azure_chat_example.py#L1) : Simple Azure OpenAI chat example asking a plain-language question.
-- [bad_prompt_terraform_example.py](bad_prompt_terraform_example.py#L1) : Illustration of a vague prompt that produces low-quality Terraform output.
-- [good_prompt_terraform_example.py](good_prompt_terraform_example.py#L1) : Precise prompts that encourage production-ready Terraform HCL output.
+- [Temperature_Analyzer.py] : Analyze logs and return a concise root-cause and remediation.
+- [azure_chat_example.py] : Simple Azure OpenAI chat example asking a plain-language question.
+- [bad_prompt_terraform_example.py] : Illustration of a vague prompt that produces low-quality Terraform output.
+- [good_prompt_terraform_example.py](: Precise prompts that encourage production-ready Terraform HCL output.
 - [requirements.txt](requirements.txt#L1) : Python dependencies for this project.
 
 Quick start (macOS)
