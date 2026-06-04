@@ -1,0 +1,28 @@
+flowchart LR
+    PD[PagerDuty<br/>incident webhook]:::ext
+    API[FastAPI<br/>/webhooks/pagerduty]:::api
+
+    subgraph Graph[LangGraph StateGraph]
+        N1[1. pd_collector<br/>parse + map source]:::node
+        N2[2. sumo_fetcher<br/>query by source]:::node
+        N3[3. llm_analyzer<br/>Claude RCA]:::node
+        N4[4. slack_notifier<br/>post message]:::node
+    end
+
+    SUMO[(SumoLogic<br/>search API)]:::ext
+    LLM[(AWS Bedrock<br/>LLM)]:::ext
+    SLACK[(Slack<br/>#incidents)]:::ext
+    REDIS[(Redis<br/>checkpointer + cache)]:::store
+
+    PD --> API --> N1 --> N2 --> N3 --> N4 --> SLACK
+    N2 <--> SUMO
+    N3 <--> LLM
+    N1 <--> REDIS
+    N2 <--> REDIS
+    N3 <--> REDIS
+    Graph <-. checkpoint each step .-> REDIS
+
+    classDef ext fill:#fde68a,stroke:#ca8a04,color:#78350f
+    classDef api fill:#e0e7ff,stroke:#4338ca,color:#312e81
+    classDef node fill:#ffffff,stroke:#1d4ed8,color:#0f172a
+    classDef store fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d

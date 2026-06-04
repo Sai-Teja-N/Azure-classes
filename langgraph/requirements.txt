@@ -1,0 +1,17 @@
+# --- Core ---
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+requests==2.32.3
+pydantic==2.9.2
+boto3==1.34.162
+
+# --- LangGraph ---
+langgraph==0.2.34
+langgraph-checkpoint-redis==0.0.6
+
+# --- LangChain core ---
+langchain-core==0.3.10
+langchain-openai==0.2.2
+
+# --- Redis (optional; falls back to in-memory) ---
+redis==5.0.8
