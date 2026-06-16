@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  aws-infra-agent:
+    build: .
+    # Use the local env file
+    env_file:
+      - .env
+    volumes:
+      # Mount AWS credentials so boto3 can authenticate
+      - ~/.aws:/root/.aws:ro
+      # Mount the terraform_output directory to access the generated files on the host
+      - ./terraform_output:/app/terraform_output
+    # Environment overrides
+    environment:
+      - AWS_PROFILE=rca-bedrock
+      - AWS_DEFAULT_REGION=ap-south-1
+      - CREW_VERBOSE=true
