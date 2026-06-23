@@ -1,17 +1,16 @@
+# Environments
 .env
-logs/
-.venv/
 venv/
-__pycache__/
-*.pyc
-.DS_Store
+.venv/
 
 # Terraform
 .terraform/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
-
-# Application specific
 output/
 output_OLD/
+
+# Python
+__pycache__/
+*.pyc

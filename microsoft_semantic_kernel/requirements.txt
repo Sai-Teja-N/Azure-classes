@@ -1,0 +1,3 @@
+semantic-kernel==1.43.1
+boto3==1.34.162
+python-dotenv==1.2.2
