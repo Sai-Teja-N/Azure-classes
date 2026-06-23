@@ -26,7 +26,7 @@ pipeline {
                 dir("${SK_DIR}") {
                     sh '''
                         echo "Setting up Python environment..."
-                        python3 -m venv venv
+                        python3.10 -m venv venv
                         . venv/bin/activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
@@ -41,8 +41,8 @@ pipeline {
                     sh '''
                         . venv/bin/activate
                         echo "Checking Python syntax..."
-                        python3 -m py_compile main.py
-                        python3 -m py_compile test_script.py
+                        python3.10 -m py_compile main.py
+                        python3.10 -m py_compile test_script.py
                     '''
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
                         . venv/bin/activate
                         echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
                         # AWS Credentials are automatically sourced from the Jenkins EC2 IAM Role
-                        python3 main.py "${INFRA_REQUEST}"
+                        python3.10 main.py "${INFRA_REQUEST}"
                     '''
                 }
             }
