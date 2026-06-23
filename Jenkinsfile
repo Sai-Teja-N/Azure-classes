@@ -12,6 +12,10 @@ pipeline {
         
         // Ensure Terraform commands run non-interactively
         TF_IN_AUTOMATION = 'true'
+        
+        // Ensure boto3 knows which AWS region to connect to
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        AWS_REGION = 'ap-south-1'
     }
 
     parameters {
