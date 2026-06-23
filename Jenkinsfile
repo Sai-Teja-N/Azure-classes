@@ -54,18 +54,12 @@ pipeline {
             }
             steps {
                 dir("${SK_DIR}") {
-                    withCredentials([
-                        // In Jenkins, you must configure these Secret Texts in 'Manage Jenkins -> Credentials'
-                        string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                        string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        string(credentialsId: 'bedrock-model-id', variable: 'BEDROCK_MODEL_ID') // optional
-                    ]) {
-                        sh '''
-                            . venv/bin/activate
-                            echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
-                            python3 main.py "${INFRA_REQUEST}"
-                        '''
-                    }
+                    sh '''
+                        . venv/bin/activate
+                        echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
+                        # AWS Credentials are automatically sourced from the Jenkins EC2 IAM Role
+                        python3 main.py "${INFRA_REQUEST}"
+                    '''
                 }
             }
         }
