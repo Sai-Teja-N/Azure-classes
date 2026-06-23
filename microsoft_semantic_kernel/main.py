@@ -55,17 +55,17 @@ provider "aws" {
             
         # Run Terraform commands automatically
         print("\n[System] Initializing Terraform...")
-        init_result = subprocess.run(["terraform", "init"], cwd=output_dir, capture_output=True, text=True)
+        init_result = subprocess.run(["terraform", "init"], cwd=output_dir)
         if init_result.returncode != 0:
-            print(f"[Error] Terraform init failed:\n{init_result.stderr}")
+            print("[Error] Terraform init failed.")
             sys.exit(1)
 
         print("\n[System] Applying Terraform Configuration...")
-        apply_result = subprocess.run(["terraform", "apply", "-auto-approve"], cwd=output_dir, capture_output=True, text=True)
+        apply_result = subprocess.run(["terraform", "apply", "-auto-approve"], cwd=output_dir)
         if apply_result.returncode == 0:
-            return f"[Success] Infrastructure deployed successfully!\n{apply_result.stdout}"
+            return "[Success] Infrastructure deployed successfully!"
         else:
-            print(f"[Error] Terraform apply failed:\n{apply_result.stderr}")
+            print("[Error] Terraform apply failed.")
             sys.exit(1)
 
 
