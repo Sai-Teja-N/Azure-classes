@@ -126,6 +126,7 @@ async def main():
     4. For `tls_private_key`, the correct attribute for the private key is `private_key_pem`, NOT `private_key_pem_file`.
     5. Do NOT use `default = true` inside a `data "aws_subnet"` block, as it does not exist. If you need a subnet, use `data "aws_subnets" "default" { filter { name = "vpc-id" values = [data.aws_vpc.default.id] } }`. Better yet, do NOT specify a subnet or VPC for basic EC2 instances unless explicitly requested; AWS will automatically launch them in the default VPC and subnet.
     6. Ensure your code is self-contained, complete, and syntactically valid Terraform 0.14+ syntax.
+    7. Do NOT use inline `acl`, `versioning`, `server_side_encryption_configuration`, or `block_public_acls` attributes inside the `aws_s3_bucket` block. These are deprecated in Terraform AWS Provider v5. You MUST use standalone resources like `aws_s3_bucket_public_access_block`, `aws_s3_bucket_versioning`, etc.
     """
     
     # Add Semantic Functions as Plugins
