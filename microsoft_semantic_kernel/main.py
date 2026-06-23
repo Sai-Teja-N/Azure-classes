@@ -121,7 +121,7 @@ async def main():
     IMPORTANT: Do NOT include a `provider "aws"` block in your code. The provider is already configured globally.
     CRITICAL INSTRUCTIONS:
     1. If you need an SSH key pair or any other local files, DO NOT use the `file()` function with local paths like `~/.ssh/id_rsa.pub`. Instead, use the `tls_private_key` and `aws_key_pair` resources to generate and use a new key dynamically.
-    2. Do NOT hardcode AMI IDs (e.g. ami-0c55b159cbfafe1f0) as they vary by region and may not exist. Instead, ALWAYS use a `data "aws_ami"` block to dynamically fetch the latest AMI for the required OS (e.g., Amazon Linux 2023 or Ubuntu).
+    2. Do NOT hardcode AMI IDs. ALWAYS use a `data "aws_ami"` block to dynamically fetch the latest AMI. You MUST include `owners = ["amazon"]` (for Amazon Linux) or `owners = ["099720109477"]` (for Ubuntu) inside the data block, otherwise it will fail with a 'query returned no results' error. For Amazon Linux 2023, the filter name should be `al2023-ami-2023.*-x86_64`.
     3. Ensure ALL resources and data sources referenced in your code are explicitly declared.
     4. For `tls_private_key`, the correct attribute for the private key is `private_key_pem`, NOT `private_key_pem_file`.
     5. Do NOT use `default = true` inside a `data "aws_subnet"` block, as it does not exist. If you need a subnet, use `data "aws_subnets" "default" { filter { name = "vpc-id" values = [data.aws_vpc.default.id] } }`. Better yet, do NOT specify a subnet or VPC for basic EC2 instances unless explicitly requested; AWS will automatically launch them in the default VPC and subnet.
