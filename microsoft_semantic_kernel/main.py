@@ -70,6 +70,12 @@ provider "aws" {
 async def main():
     load_dotenv()
     
+    # Fallback for Jenkins if environment variables are stripped
+    if "AWS_DEFAULT_REGION" not in os.environ:
+        os.environ["AWS_DEFAULT_REGION"] = "ap-south-1"
+    if "AWS_REGION" not in os.environ:
+        os.environ["AWS_REGION"] = "ap-south-1"
+    
     if len(sys.argv) < 2:
         print("Usage: python main.py \"<Your infrastructure request>\"")
         sys.exit(1)
