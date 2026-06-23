@@ -40,9 +40,6 @@ pipeline {
                         terraform --version
                         
                         echo "Setting up Python environment..."
-                        # We are already in python 3.10 container, but venv is still good practice
-                        python3 -m venv venv
-                        . venv/bin/activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
                     '''
@@ -54,7 +51,6 @@ pipeline {
             steps {
                 dir("${SK_DIR}") {
                     sh '''
-                        . venv/bin/activate
                         echo "Checking Python syntax..."
                         python3 -m py_compile main.py
                         python3 -m py_compile test_script.py
@@ -70,7 +66,6 @@ pipeline {
             steps {
                 dir("${SK_DIR}") {
                     sh '''
-                        . venv/bin/activate
                         echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
                         # AWS Credentials are automatically sourced from the Jenkins EC2 IAM Role
                         python3 main.py "${INFRA_REQUEST}"
