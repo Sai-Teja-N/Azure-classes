@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.10-slim'
+            args '-u root' // Run as root to allow apt-get installations
+        }
+    }
 
     environment {
         // Define path to the Semantic Kernel directory
@@ -21,12 +26,22 @@ pipeline {
             }
         }
 
-        stage('Setup Environment') {
+        stage('Setup Dependencies') {
             steps {
                 dir("${SK_DIR}") {
                     sh '''
+                        echo "Installing OS dependencies and Terraform..."
+                        apt-get update && apt-get install -y wget unzip git
+                        
+                        # Download and install Terraform
+                        wget https://releases.hashicorp.com/terraform/1.8.5/terraform_1.8.5_linux_amd64.zip
+                        unzip -o terraform_1.8.5_linux_amd64.zip
+                        mv terraform /usr/local/bin/
+                        terraform --version
+                        
                         echo "Setting up Python environment..."
-                        python3.10 -m venv venv
+                        # We are already in python 3.10 container, but venv is still good practice
+                        python3 -m venv venv
                         . venv/bin/activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
@@ -41,8 +56,8 @@ pipeline {
                     sh '''
                         . venv/bin/activate
                         echo "Checking Python syntax..."
-                        python3.10 -m py_compile main.py
-                        python3.10 -m py_compile test_script.py
+                        python3 -m py_compile main.py
+                        python3 -m py_compile test_script.py
                     '''
                 }
             }
@@ -58,7 +73,7 @@ pipeline {
                         . venv/bin/activate
                         echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
                         # AWS Credentials are automatically sourced from the Jenkins EC2 IAM Role
-                        python3.10 main.py "${INFRA_REQUEST}"
+                        python3 main.py "${INFRA_REQUEST}"
                     '''
                 }
             }
@@ -68,8 +83,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline execution complete.'
-            // Clean up workspace if necessary
-            // cleanWs()
         }
         success {
             echo 'Pipeline succeeded!'
