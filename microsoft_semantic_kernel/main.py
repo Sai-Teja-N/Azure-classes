@@ -33,22 +33,23 @@ class TerraformDeploymentPlugin:
         print("\n[System] Saved Terraform code to output/main.tf")
         
         # Ensure provider.tf exists
-        provider_content = """terraform {
-  required_providers {
-    aws = {
+        aws_region = os.getenv("AWS_DEFAULT_REGION", "ap-south-1")
+        provider_content = f"""terraform {{
+  required_providers {{
+    aws = {{
       source  = "hashicorp/aws"
       version = "~> 5.0"
-    }
-    tls = {
+    }}
+    tls = {{
       source  = "hashicorp/tls"
       version = "~> 4.0"
-    }
-  }
-}
+    }}
+  }}
+}}
 
-provider "aws" {
-  # Credentials picked up automatically from environment variables
-}
+provider "aws" {{
+  region = "{aws_region}"
+}}
 """
         with open(os.path.join(output_dir, "provider.tf"), "w") as f:
             f.write(provider_content)
