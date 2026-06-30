@@ -126,9 +126,9 @@ async def main():
     3. Ensure ALL resources and data sources referenced in your code are explicitly declared.
     4. For `tls_private_key`, the correct attribute for the private key is `private_key_pem`, NOT `private_key_pem_file`.
     5. Do NOT use `default = true` inside a `data "aws_subnet"` block, as it does not exist. If you need a subnet, use `data "aws_subnets" "default" { filter { name = "vpc-id" values = [data.aws_vpc.default.id] } }`. Better yet, do NOT specify a subnet or VPC for basic EC2 instances unless explicitly requested; AWS will automatically launch them in the default VPC and subnet.
-    6. Ensure your code is self-contained, complete, and syntactically valid Terraform 0.14+ syntax.
-    7. You MUST NOT use the inline `acl` attribute or nested blocks like `versioning`, `server_side_encryption_configuration`, or `block_public_acls` inside the `aws_s3_bucket` block. They are deprecated in AWS Provider v5 and will fail. Use standalone resources like `aws_s3_bucket_acl`, `aws_s3_bucket_public_access_block`, `aws_s3_bucket_versioning`, etc.
+    7. STRICT RULE: You MUST NOT use the `acl` attribute inside `aws_s3_bucket` under ANY circumstances. It is deprecated and forbidden. Use the `aws_s3_bucket_acl` resource instead if ACLs are needed, but generally avoid them. Likewise, do NOT use inline `versioning`, `server_side_encryption_configuration`, or `block_public_acls` inside `aws_s3_bucket`.
     8. For `aws_s3_bucket_logging`, `target_bucket` and `target_prefix` are top-level arguments. Do NOT nest them inside a `logging_enabled` block, as that block type does not exist in AWS Provider v5.
+    9. For `aws_s3_bucket_lifecycle_configuration`, inside the `rule` block, you MUST use `status = "Enabled"` or `status = "Disabled"`. Do NOT use `enabled = true`, as it does not exist in v5.
     """
     
     # Add Semantic Functions as Plugins
