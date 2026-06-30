@@ -30,6 +30,9 @@ class TerraformDeploymentPlugin:
         # FORCIBLY scrub any hallucinated 'acl' attributes since LLMs are stubborn and it causes infinite hangs
         clean_code = re.sub(r'^\s*acl\s*=.*$', '', clean_code, flags=re.MULTILINE)
         
+        # FORCIBLY scrub 'enabled = true/false' inside lifecycle rules (causes syntax error in AWS Provider v5)
+        clean_code = re.sub(r'^\s*enabled\s*=\s*(true|false)\s*$', '', clean_code, flags=re.MULTILINE)
+        
         # Save all the AI generated code into a single main.tf file
         with open(os.path.join(output_dir, "main.tf"), "w") as f:
             f.write(clean_code)
