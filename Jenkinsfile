@@ -71,8 +71,6 @@ pipeline {
                 dir("${SK_DIR}") {
                     sh '''
                         echo "Running Semantic Kernel with prompt: ${INFRA_REQUEST}"
-                        # Enable Terraform Debug Logging to catch exactly why S3 is hanging
-                        export TF_LOG=DEBUG
                         # AWS Credentials are automatically sourced from the Jenkins EC2 IAM Role
                         python3 main.py "${INFRA_REQUEST}"
                     '''
