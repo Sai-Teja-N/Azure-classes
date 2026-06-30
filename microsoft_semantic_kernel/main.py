@@ -23,8 +23,12 @@ class TerraformDeploymentPlugin:
         output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
         
+        import re
         # Clean up code block markers if the AI added them
         clean_code = terraform_code.replace("```terraform", "").replace("```hcl", "").replace("```", "").strip()
+        
+        # FORCIBLY scrub any hallucinated 'acl' attributes since LLMs are stubborn and it causes infinite hangs
+        clean_code = re.sub(r'^\s*acl\s*=.*$', '', clean_code, flags=re.MULTILINE)
         
         # Save all the AI generated code into a single main.tf file
         with open(os.path.join(output_dir, "main.tf"), "w") as f:
