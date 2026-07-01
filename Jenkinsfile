@@ -63,6 +63,40 @@ pipeline {
             }
         }
 
+        stage('Continuous Evaluation') {
+            steps {
+                dir("${SK_DIR}") {
+                    sh '''
+                        echo "================================================="
+                        echo "Running Continuous Evaluation Stage in Jenkins"
+                        echo "================================================="
+                        
+                        echo "[1/3] Running Python Security & Quality Evaluation..."
+                        pip install --quiet flake8 bandit
+                        # Check for critical syntax/logic errors
+                        flake8 --count --select=E9,F63,F7,F82 --show-source .
+                        # Check for Python security vulnerabilities (e.g. hardcoded keys, injection risks)
+                        bandit -r . -ll -ii -x ./venv
+                        
+                        echo "[2/3] Evaluating AI Model Readiness & HCL Generation..."
+                        # Run test_script.py to verify AI Bedrock connection and generate test HCL without applying
+                        python3 test_script.py
+                        
+                        echo "[3/3] Evaluating Generated Terraform Code (Static Validation)..."
+                        if [ -d "output" ]; then
+                            cd output
+                            python3 -c 'with open("provider.tf", "w") as f: f.write("terraform { required_providers { aws = { source = \\"hashicorp/aws\\", version = \\"~> 5.0\\" } } }\\nprovider \\"aws\\" { region = \\"ap-south-1\\" }\\n")'
+                            terraform init -backend=false
+                            terraform validate
+                            echo "✅ Continuous Evaluation PASSED: AI model, Python security, and HCL syntax verified."
+                        else
+                            echo "⚠️ No output directory found after test generation."
+                        fi
+                    '''
+                }
+            }
+        }
+
         stage('Run AI Semantic Kernel') {
             when {
                 expression { params.RUN_TERRAFORM == true }
