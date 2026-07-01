@@ -73,10 +73,10 @@ pipeline {
                         
                         echo "[1/3] Running Python Security & Quality Evaluation..."
                         pip install --quiet flake8 bandit
-                        # Check for critical syntax/logic errors
-                        flake8 --count --select=E9,F63,F7,F82 --show-source .
-                        # Check for Python security vulnerabilities (e.g. hardcoded keys, injection risks)
-                        bandit -r . -ll -ii -x ./venv
+                        # Check for critical syntax/logic errors (excluding virtual environments)
+                        flake8 --count --select=E9,F63,F7,F82 --show-source --exclude=venv,.venv,env,.env,.git,*venv* .
+                        # Check for Python security vulnerabilities only on project files
+                        bandit -r main.py test_script.py -ll -ii
                         
                         echo "[2/3] Evaluating AI Model Readiness & HCL Generation..."
                         # Run test_script.py to verify AI Bedrock connection and generate test HCL without applying
