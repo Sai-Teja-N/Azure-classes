@@ -85,7 +85,7 @@ pipeline {
                         echo "[3/3] Evaluating Generated Terraform Code (Static Validation)..."
                         if [ -d "output" ]; then
                             cd output
-                            python3 -c 'with open("provider.tf", "w") as f: f.write("terraform { required_providers { aws = { source = \\"hashicorp/aws\\", version = \\"~> 5.0\\" } } }\\nprovider \\"aws\\" { region = \\"ap-south-1\\" }\\n")'
+                            python3 -c 'with open("provider.tf", "w") as f: f.write("terraform {\\n  required_providers {\\n    aws = {\\n      source  = \"hashicorp/aws\"\\n      version = \"~> 5.0\"\\n    }\\n  }\\n}\\n\\nprovider \"aws\" {\\n  region = \"ap-south-1\"\\n}\\n")'
                             terraform init -backend=false
                             terraform validate
                             echo "✅ Continuous Evaluation PASSED: AI model, Python security, and HCL syntax verified."
